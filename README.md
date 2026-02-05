@@ -53,7 +53,7 @@ The assessment is based only on image quality, not on clinical or diagnostic con
 
 The project follows a progressive and explainable ML methodology.
 
-1️⃣ Image Preprocessing
+## 1️) Image Preprocessing
 
 Image loading and normalization
 
@@ -63,7 +63,7 @@ Resizing for standardization
 
 Optional denoising and contrast enhancement
 
-2️⃣ Feature Extraction (ML Baseline)
+## 2️) Feature Extraction (ML Baseline)
 
 Each image is transformed into a vector of numerical features such as:
 
@@ -77,7 +77,7 @@ Entropy (image disorder)
 
 These features provide an interpretable representation of image quality.
 
-3️⃣ Machine Learning Models
+## 3️) Machine Learning Models
 
 Classical ML models are trained on extracted features:
 
@@ -97,7 +97,7 @@ confusion matrix
 
 error analysis
 
-4️⃣ Deep Learning Extension
+## 4️) Deep Learning Extension
 
 A simple Convolutional Neural Network (CNN) may be implemented to:
 
