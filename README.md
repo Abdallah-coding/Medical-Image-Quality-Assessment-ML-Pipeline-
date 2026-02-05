@@ -1,6 +1,6 @@
-🩻 Medical Image Quality Assessment (ML Pipeline)
+## 🩻 MEDICAL IMAGE QUALITY ASSESSMENT (ML Pipeline)
 
-PROJECT OVERVIEW
+## PROJECT OVERVIEW
 
 This project aims to build an end-to-end Machine Learning pipeline to automatically assess the technical quality of medical images (e.g. X-ray, MRI), focusing on criteria such as sharpness, noise, contrast, and overall image integrity.
 
@@ -10,7 +10,7 @@ The goal is not medical diagnosis, but image quality assessment, i.e. determinin
 ---
 
 
-MOTIVATION
+## MOTIVATION
 
 In medical imaging workflows, a significant number of images are unusable due to:
 
@@ -34,7 +34,7 @@ learning patterns that distinguish usable from unusable images
 ---
 
 
-PROBLEM DEFINITION
+## PROBLEM DEFINITION
 
 
 Given a medical image, the system outputs:
@@ -49,7 +49,7 @@ The assessment is based only on image quality, not on clinical or diagnostic con
 
 ---
 
-TECHNICAL APPROACH
+## TECHNICAL APPROACH
 
 The project follows a progressive and explainable ML methodology.
 
@@ -108,7 +108,7 @@ compare performance and complexity with classical ML approaches
 
 ---
 
-📊 Expected Outcomes
+## EXPECTED OUTCOMES
 
 A reproducible ML pipeline for image quality assessment
 
@@ -121,26 +121,36 @@ Clear justification of design choices
 ---
 
 
-📂 Project Structure
+## PROJECT STRUCTURE
 
 
 medical-image-quality-assessment/
+
 ├── src/
+
 │   ├── preprocessing.py          # common preprocessing
+
 │   ├── features.py               # handcrafted features (baseline)
+
 │   ├── dataset.py                # dataset loader (images + labels)
+
 │   ├── classical_ml/             # scikit-learn pipeline
+
 │   └── cnn/                      # CNN method (deep learning)
+
 ├── notebooks/                    # exploration & experiments
+
 ├── models/                       # saved models
+
 ├── reports/                      # plots & results
+
 └── data/                         # raw/processed/splits
 
 
 ---
 
 
-🧪 Tools & Technologies
+## TOOLS and TECHNOLOGIES
 
 Python
 
@@ -156,7 +166,7 @@ PyTorch for CNN experiments
 
 ---
 
-⚠️ Scope & Limitations
+## SCOPE & LIMITATIONS
 
 This project does not perform medical diagnosis.
 
@@ -167,7 +177,7 @@ Quality assessment criteria are technical, not clinical.
 
 ---
 
-👤 Author
+## AUTHOR
 
 Abdallah-coding Computer Science student
 Interested in Machine Learning Engineering, Big Data, and Applied AI
