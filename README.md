@@ -1,5 +1,6 @@
 🩻 Medical Image Quality Assessment (ML Pipeline)
-📌 Project Overview
+
+PROJECT OVERVIEW
 
 This project aims to build an end-to-end Machine Learning pipeline to automatically assess the technical quality of medical images (e.g. X-ray, MRI), focusing on criteria such as sharpness, noise, contrast, and overall image integrity.
 
@@ -9,7 +10,7 @@ The goal is not medical diagnosis, but image quality assessment, i.e. determinin
 ---
 
 
-🎯 Motivation
+MOTIVATION
 
 In medical imaging workflows, a significant number of images are unusable due to:
 
@@ -33,7 +34,8 @@ learning patterns that distinguish usable from unusable images
 ---
 
 
-🧠 Problem Definition
+PROBLEM DEFINITION
+
 
 Given a medical image, the system outputs:
 
@@ -47,7 +49,7 @@ The assessment is based only on image quality, not on clinical or diagnostic con
 
 ---
 
-🛠️ Technical Approach
+TECHNICAL APPROACH
 
 The project follows a progressive and explainable ML methodology.
 
@@ -95,7 +97,7 @@ confusion matrix
 
 error analysis
 
-4️⃣ (Optional) Deep Learning Extension
+4️⃣ Deep Learning Extension
 
 A simple Convolutional Neural Network (CNN) may be implemented to:
 
@@ -150,7 +152,7 @@ Matplotlib – visualization
 
 scikit-learn – machine learning
 
-(Optional) PyTorch / TensorFlow for CNN experiments
+PyTorch for CNN experiments
 
 ---
 
@@ -165,22 +167,7 @@ Quality assessment criteria are technical, not clinical.
 
 ---
 
-
-🚀 Future Improvements
-
-Larger and more diverse datasets
-
-Multi-class quality scoring
-
-More robust deep learning models
-
-Integration into a real-time quality-control pipeline
-
-
----
-
-
 👤 Author
 
-Computer Science student
+Abdallah-coding Computer Science student
 Interested in Machine Learning Engineering, Big Data, and Applied AI
