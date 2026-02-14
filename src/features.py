@@ -1,9 +1,5 @@
 # handcrafted features (baseline)
-# Purpose: convert an image into numbers that correlate with quality. Sharpness (Laplacian variance): blurry images have fewer edges → lower variance.
-# Contrast: low-contrast X-rays have a lower std.
-# Brightness: too dark/bright can be flagged.
-# Entropy: measures “information spread”; can drop with low contrast / extreme smoothing.
-# SNR proxy (mean/std): crude, but useful baseline.
+# !! First I explain all the materials I learned and then below I put the code !!
 
 """
 Instead of giving the model 512 x 512 = 262,144 pixels, we summarize the image using a few meaningful numbers. We use 5 different features: 
@@ -30,7 +26,51 @@ Sharp image = high Laplacian variance
 Blurry image = low Laplacian variance
 
 
+Contrast measures how spread out pixel values are.
 
+If most pixels are around 120–130:
+--> low contrast
+--> small standard deviation
+
+If pixels range from 10 to 240:
+--> high contrast
+--> large standard deviation
+
+
+Brightness = average pixel value.
+If mean is:
+very low --> image is dark
+very high --> image is too bright
+
+
+
+Here entropy measures how unpredictable pixel intensities are.
+
+If an image has:
+
+many different intensity levels evenly distributed ---> high entropy
+if most pixels are similar ---> low entropy
+
+Low entropy often means: strong smoothing, very low contrast, information loss
+
+
+SNR = Signal-to-Noise Ratio. We approximative SNR ≈ mean / standard deviation, so noisy images tend to have lower SNR proxy. (The average of all pixel intensities in the image)
+If most pixels are close to the mean:
+- low std
+
+If pixels vary a lot:
+- high std
+
+
+Finally an important point to understand how we process and why these features:
+Noise:
+increases variation metrics
+decreases SNR
+
+Blur:
+decreases Laplacian strongly
+slightly decreases entropy
+slightly decreases contrast
 
 """
 
@@ -38,28 +78,29 @@ import cv2
 import numpy as np
 
 def sharpness_laplacienne(img: np.ndarray) -> float:
-    """Higher = sharper (less blurry)."""
     return float(cv2.Laplacian(img, cv2.CV_64F).var())
 
 def contrast_std(img: np.ndarray) -> float:
-    """Higher = more contrast (more intensity variation)."""
     return float(np.std(img))
 
 def brightness_mean(img: np.ndarray) -> float:
-    """Average brightness of the image."""
     return float(np.mean(img))
 
 def entropy(img: np.ndarray) -> float:
     """
-    Shannon entropy of grayscale histogram.
-    Higher entropy often means more information variety.
+    We compute a histogram because:
+    Entropy requires a probability distribution.
+    The histogram gives:
+    How often each intensity value appears.
+    Then we convert counts to probabilities
     """
+    
     hist = cv2.calcHist([img], [0], None, [256], [0, 256]).ravel()
     p = hist / (hist.sum() + 1e-12)
     p = p[p > 0]
     return float(-(p * np.log2(p)).sum())
 
 def snr_proxy(img: np.ndarray) -> float:
-    """Very simple SNR-like metric: mean / std."""
+    # Here we don't use a true SNR in fact true SNR requires separating signal and noise which is complex
     s = float(np.std(img)) + 1e-12
     return float(np.mean(img) / s)
