@@ -1,183 +1,104 @@
-## 🩻 MEDICAL IMAGE QUALITY ASSESSMENT (ML Pipeline)
-
-## PROJECT OVERVIEW
-
-This project aims to build an end-to-end Machine Learning pipeline to automatically assess the technical quality of medical images (e.g. X-ray, MRI), focusing on criteria such as sharpness, noise, contrast, and overall image integrity.
-
-The goal is not medical diagnosis, but image quality assessment, i.e. determining whether an image is technically suitable for further analysis.
+## MEDICAL IMAGE QUALITY ASSESSMENT (ML Pipeline)
 
 
+## Introduction
+
+L’objectif de ce projet est avant tout pédagogique. Il s’agit d’une étape dans mon apprentissage du Machine Learning appliqué aux images médicales.
+***Note importante : ce projet ne vise pas à détecter une pathologie. Il constitue une étape intermédiaire vers un objectif plus ambitieux : développer à terme un modèle capable de détecter une pneumonie à partir d’une radiographie pulmonaire.***
+Avant d’en arriver là, il m'est nécessaire de comprendre les bases :
+comment construire un jeu de données supervisé,
+comment extraire des caractéristiques pertinentes à partir d’images,
+comment entraîner un modèle de référence (baseline),
+et comment évaluer ses performances.
+
+Dans ce projet, je me concentre donc sur l’apprentissage du processus complet d’entraînement d’un modèle.
+L’objectif est d’entraîner un modèle simple à partir de caractéristiques choisies manuellement (netteté (variance du Laplacien), contraste (écart-type), luminosité moyenne, entropie de Shannon, approximation du SNR) afin de déterminer si une radiographie est de bonne ou de mauvaise qualité technique.
+
+Cette étape me permet de comprendre la logique d’un pipeline supervisé, d’analyser le comportement des métriques d’évaluation, de justifier méthodologiquement l’utilisation future d’un modèle plus complexe comme un CNN.
+Commencer par un modèle de référence permet d’évaluer si les caractéristiques extraites sont déjà discriminantes, avant d’introduire une architecture plus complexe.
+
+
+
+Dans ce README, vous trouverez :
+
+**1) Les résultats du modèle de référence ainsi que leur interprétation.**
+
+**2) Les explications détaillées concernant le choix du modèle, des caractéristiques utilisées, la méthodologie suivie et les limites du dataset synthétique (images dégradées artificiellement)** 
+
+---
 ---
 
 
-## MOTIVATION
 
-In medical imaging workflows, a significant number of images are unusable due to:
+## 1) Les résultats du modèle de référence et interprétation
 
-motion blur
+Modèle utilisé : régression logistique (classification binaire), voici les résultats:
 
-noise
 
-poor contrast
+<pre> 
+confusion matrix:
+[[63 12]
+ [12 13]]
 
-acquisition artifacts
+  classification report:
+              precision    recall  f1-score   support
 
-These low-quality images often require manual inspection or re-acquisition, increasing cost and time.
+           0      0.840     0.840     0.840        75
+           1      0.520     0.520     0.520        25 
 
-This project explores how Machine Learning and Computer Vision can help automate this first quality-control step by:
+    accuracy                          0.760       100
+   macro avg      0.680     0.680     0.680       100
+weighted avg      0.760     0.760     0.760       100 
+  
+</pre>
+    
 
-extracting objective image quality indicators
+***Interprétation:***
 
-learning patterns that distinguish usable from unusable images
+La matrice de confusion indique que:
+- 63 images de mauvaise qualité ont été correctement classées
+- 13 images de bonne qualité ont été correctement détectées
+- 12 images de mauvaise qualité ont été à tort considérées comme bonnes
+- 12 images de bonne qualité ont été à tort classées comme mauvaises
 
+Le modèle atteint une accuracy globale de 76 %. Cependant, l’accuracy seule peut être trompeuse, car le jeu de données est déséquilibré (75 images de mauvaise qualité contre 25 images de bonne qualité).
+L’analyse détaillée montre que :
+Le modèle détecte correctement les images de mauvaise qualité (classe 0) avec une précision et un rappel élevés (0.84). En revanche, les performances sont plus faibles pour les images de bonne qualité (classe 1), avec un f1-score de 0.52.
 
----
+Cela signifie que le modèle a plus de difficulté à identifier correctement les images de bonne qualité et en confond une partie avec des images de mauvaise qualité.
+Ces résultats indiquent que les caractéristiques extraites contiennent une information discriminante, mais qu’elles ne permettent pas une séparation parfaite des classes.
 
+Ce modèle est donc pour moi un point de référence me permettant d’évaluer l’apport futur de modèles plus complexes comme des architectures de type CNN capables de capturer des relations non linéaires dans les données.
 
-## PROBLEM DEFINITION
 
 
-Given a medical image, the system outputs:
 
-a quality score or
 
-a binary decision:
-exploitable (good quality) / non-exploitable (poor quality)
 
-The assessment is based only on image quality, not on clinical or diagnostic content.
 
 
----
 
-## TECHNICAL APPROACH
 
-The project follows a progressive and explainable ML methodology.
+anglais:
 
-## 1️) Image Preprocessing
 
-Image loading and normalization
 
-Conversion to grayscale
+Introduction
 
-Resizing for standardization
+This project is a learning step in my journey toward building medical image analysis models.
 
-Optional denoising and contrast enhancement
+The long-term objective is to develop a CNN-based model capable of detecting pneumonia from chest X-ray images. However, before implementing complex architectures, it is essential to understand the fundamentals of supervised learning workflows.
 
-## 2️) Feature Extraction (ML Baseline)
+In this project, I focus on building a baseline classification pipeline for technical image quality assessment. The goal is to determine whether a chest X-ray image is of good or poor quality based on handcrafted features such as sharpness, contrast, entropy, brightness, and an SNR proxy.
 
-Each image is transformed into a vector of numerical features such as:
+Starting with a baseline model allows:
 
-Sharpness (variance of Laplacian)
+validating the relevance of extracted features,
 
-Contrast (pixel intensity standard deviation)
+understanding evaluation metrics,
 
-Brightness
+analyzing class imbalance effects,
 
-Entropy (image disorder)
+establishing a performance reference before moving to more complex models such as CNNs.
 
-These features provide an interpretable representation of image quality.
-
-## 3️) Machine Learning Models
-
-Classical ML models are trained on extracted features:
-
-Logistic Regression
-
-Support Vector Machines
-
-Random Forests
-
-Models are evaluated using:
-
-accuracy
-
-precision / recall
-
-confusion matrix
-
-error analysis
-
-## 4️) Deep Learning Extension
-
-A simple Convolutional Neural Network (CNN) may be implemented to:
-
-learn features directly from raw images
-
-compare performance and complexity with classical ML approaches
-
-
----
-
-## EXPECTED OUTCOMES
-
-A reproducible ML pipeline for image quality assessment
-
-Quantitative comparison between different features and models
-
-Analysis of model limitations and failure cases
-
-Clear justification of design choices
-
----
-
-
-## PROJECT STRUCTURE
-
-
-medical-image-quality-assessment/
-
-├── src/
-
-│   ├── preprocessing.py          # common preprocessing
-
-│   ├── features.py               # handcrafted features (baseline)
-
-│   ├── dataset.py                # dataset loader (images + labels)
-
-│   ├── classical_ml/             # scikit-learn pipeline
-
-│   └── cnn/                      # CNN method (deep learning)
-
-├── notebooks/                    # exploration & experiments
-
-├── models/                       # saved models
-
-├── reports/                      # plots & results
-
-└── data/                         # raw/processed/splits
-
-
----
-
-
-## TOOLS and TECHNOLOGIES
-
-Python
-
-OpenCV – image processing
-
-NumPy – numerical computation
-
-Matplotlib – visualization
-
-scikit-learn – machine learning
-
-PyTorch for CNN experiments
-
----
-
-## SCOPE & LIMITATIONS
-
-This project does not perform medical diagnosis.
-
-Results depend on dataset quality and labeling.
-
-Quality assessment criteria are technical, not clinical.
-
-
----
-
-## AUTHOR
-
-Abdallah-coding Computer Science student
-Interested in Machine Learning Engineering, Big Data, and Applied AI
+This project emphasizes methodology and structured experimentation rather than model complexity.
