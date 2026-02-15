@@ -1,5 +1,43 @@
 # Machine learning models require structured tabular data. We transformed images into numerical features. Now we train on those numbers
 
+"""
+This project involves a binary classification problem (good vs poor image quality). After researching common baseline models for binary classification, I chose
+logistic regression because:
+
+- It is simple and widely used
+- It works well with small numerical feature sets
+- It provides a clear decision boundary
+- It is appropriate as a first baseline before exploring more complex models
+
+"""
+
+"""
+Baseline classification step
+
+In this file, I train a simple Logistic Regression model on the
+image quality features extracted earlier.
+
+The goal is not to build a complex model but to verify whether
+the handcrafted features (sharpness, contrast, entropy, etc.)
+are sufficient to separate good and poor quality images.
+
+Since the problem is binary (good vs poor), Logistic Regression
+is a natural first choice which is used for classification, especially binary classification: it is simple, interpretable and
+appropriate for baseline evaluation. In our case Good quality --> 1 / Poor quality --> 0
+
+
+I split the dataset into training and testing sets to evaluate
+generalization. Features are standardized to avoid scale bias.
+
+This baseline allows me to:
+- validate the feature engineering step
+- understand model evaluation metrics
+- establish a reference before exploring more advanced methods
+"""
+
+
+
+
 import pandas as pd
 
 from sklearn.model_selection import train_test_split
