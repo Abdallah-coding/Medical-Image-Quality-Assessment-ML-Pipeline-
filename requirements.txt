@@ -1,0 +1,7 @@
+# Before running the project in your terminal enter: pip install -r requirements.txt
+
+numpy
+opencv-python
+matplotlib
+pandas
+scikit-learn
