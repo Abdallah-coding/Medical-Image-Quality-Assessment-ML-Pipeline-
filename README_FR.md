@@ -72,33 +72,99 @@ Ce modèle est donc pour moi un point de référence me permettant d’évaluer 
 
 
 
+---
+
+## 2) Construction du dataset et choix méthodologiques
 
 
 
+### Origine des données
 
+Le dataset original provient de Kaggle. Les radiographies utilisées sont des images réelles de poumons.
 
+Cependant, ces images sont toutes de qualité technique correcte. Afin d’entraîner un modèle capable de distinguer des images de bonne et de mauvaise qualité, il était nécessaire de disposer d’exemples dégradés.
 
+---
 
-anglais:
+### Génération artificielle des images de mauvaise qualité
 
+Pour simuler des défauts réalistes d’acquisition, des dégradations ont été générées artificiellement à l’aide de Python (OpenCV).
 
+Les transformations appliquées sont :
 
-Introduction
+- Ajout de flou gaussien (simulation d’un mouvement du patient),
+- Ajout de bruit aléatoire,
+- Réduction du contraste.
 
-This project is a learning step in my journey toward building medical image analysis models.
+Pour chaque image originale de bonne qualité, plusieurs versions dégradées ont été créées. Cela a permis de construire un jeu de données supervisé composé de deux classes : bonne qualité et mauvaise qualité.
 
-The long-term objective is to develop a CNN-based model capable of detecting pneumonia from chest X-ray images. However, before implementing complex architectures, it is essential to understand the fundamentals of supervised learning workflows.
+---
 
-In this project, I focus on building a baseline classification pipeline for technical image quality assessment. The goal is to determine whether a chest X-ray image is of good or poor quality based on handcrafted features such as sharpness, contrast, entropy, brightness, and an SNR proxy.
+### Déséquilibre du dataset
 
-Starting with a baseline model allows:
+Le dataset final est déséquilibré.
 
-validating the relevance of extracted features,
+Ce déséquilibre provient directement du processus de génération : pour chaque image originale, plusieurs versions dégradées ont été produites, ce qui augmente mécaniquement la proportion d’images de mauvaise qualité.
 
-understanding evaluation metrics,
+Ce point est important car il influence l’interprétation des métriques d’évaluation, notamment l’accuracy.
 
-analyzing class imbalance effects,
+---
 
-establishing a performance reference before moving to more complex models such as CNNs.
+### Choix des caractéristiques (Feature Engineering)
 
-This project emphasizes methodology and structured experimentation rather than model complexity.
+Les caractéristiques utilisées sont :
+
+- Netteté (variance du Laplacien),
+- Contraste (écart-type des intensités),
+- Luminosité moyenne,
+- Entropie de Shannon,
+- Approximation du rapport signal/bruit (SNR).
+
+Ces caractéristiques ont été choisies car elles sont directement liées à la qualité technique d’une image :
+
+- Une image floue présente moins de contours nets.
+- Une image peu contrastée présente une distribution d’intensité plus concentrée.
+- Une image trop sombre ou trop lumineuse peut être difficilement exploitable.
+- L’entropie mesure la diversité d’information dans l’image.
+- Le SNR permet d’estimer la proportion de bruit.
+
+L’objectif était de vérifier si ces caractéristiques, définies manuellement, possèdent un pouvoir discriminant suffisant pour séparer les deux classes.
+
+---
+
+### Choix du modèle : régression logistique
+
+La régression logistique a été utilisée comme modèle de référence (baseline).
+
+Ce choix s’explique par plusieurs raisons :
+
+- Il s’agit d’un modèle simple et interprétable.
+- Il est adapté aux problèmes de classification binaire.
+- Il permet d’évaluer rapidement si les caractéristiques extraites sont pertinentes.
+
+Commencer par un modèle simple permet d’établir une base de comparaison avant d’introduire des architectures plus complexes.
+
+---
+
+### Limites méthodologiques
+
+Ce projet présente plusieurs limites :
+
+- Les dégradations sont artificielles et peuvent être plus simples à détecter que des défauts réels d’acquisition.
+- Le dataset est déséquilibré.
+- Les labels sont déterministes (créés par transformation).
+- La régression logistique suppose une séparation linéaire entre les classes.
+
+Ces limites doivent être prises en compte dans l’interprétation des résultats.
+
+---
+
+### Perspectives
+
+Les résultats obtenus montrent que les caractéristiques extraites possèdent un pouvoir discriminant partiel, mais ne permettent pas une séparation parfaite des classes.
+
+Dans une perspective d’évolution vers la détection de pneumonie, l’utilisation d’un modèle de type CNN apparaît pertinente, car il permet d’apprendre automatiquement des représentations spatiales complexes directement à partir des pixels.
+
+Ce projet constitue donc une étape méthodologique préalable avant la mise en œuvre d’un modèle plus avancé.
+
+---
